@@ -18,8 +18,8 @@ would get converted to:
 ```html
 <h1> heading1 </h1>
 <section class='sample'>
-<p> sample code </p>
-<code> var a = 8 </code>
+	<p> sample code </p>
+	<code> var a = 8 </code>
 </section>
 
 <section class='reference'>
