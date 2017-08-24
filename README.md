@@ -79,6 +79,6 @@ MIT
 
 # Changelog
 
-[1.0.0]() (2017-08-24)
+[1.0.0](https://github.com/jdalrymple/markdown-it-codeblocks/commit/db66c9a392e8c360991d1be2b30b995f3d29c43c) (2017-08-24)
 ------------------
 - Release
