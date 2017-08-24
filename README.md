@@ -67,9 +67,9 @@ MarkdownItCodeBlocks(md, options)
 
 Parameters:
 
-| Attribute | Type | Required | Description |
-| --------- | ---- | -------- | ----------- |
-| `md` | string | yes | The input markdown |
+| Attribute | Type | Required | Description | Default |
+| --------- | ---- | -------- | ----------- | ------- |
+| `md` | string | yes | The input markdown  |         |
 | `options.sampleClass` | string | no | Class assigned to the sample blocks | 'sample' |
 | `options.referenceClass` | string | no | Class assigned to the reference blocks | 'reference' |
 
