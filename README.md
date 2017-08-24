@@ -27,7 +27,7 @@ would get converted to:
 </section>
 
 ```
-Works well when combined with the markdown-it-header-sections plugin!
+Works well when combined with the [markdown-it-header-sections](https://www.npmjs.com/package/markdown-it-header-sections) plugin!
 
 # Table of Contents
 
