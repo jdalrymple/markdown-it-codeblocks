@@ -2,16 +2,16 @@
 
 Splits up your header sections into samples and references ie :
 
-```markdown
+````markdown
 #heading1
 sample code
-``````code
+```code
 var a = 8;
-``````
+```
 
 description here
 
-```
+````
 
 would get converted to:
 
