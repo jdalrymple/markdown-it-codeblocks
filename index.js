@@ -1,7 +1,8 @@
 function codeBlocks(md, { referenceClass = 'reference', sampleClass = 'sample', levelGrouping } = {}) {
-  // If level grouping is not an int, or is not between 1 and 7 inclusive, throw an error
-  
-  if(levelGrouping != )
+  if((levelGrouping <= 7 && levelGrouping >= 1) || !levelGrouping ) {
+    throw new Error("The given value for the levelGrouping argument is invalid. It must be either undefined, or an integer between 1 and 7 inclusive");
+  }
+
   function addSections(state, startLine, endLine) {
     const Token = state.Token;
     const tokens = [];
@@ -100,7 +101,4 @@ function headingLevel(header) {
   return parseInt(header.charAt(1));
 }
 
-module.exports = codeBlocks
-
-// if level = levelGrouping only close before the next heading with the same levelGrouping
-// All headings inside this grouping ie,all headings that are greater than this heading will not have code blocks
+module.exports = codeBlocks;
