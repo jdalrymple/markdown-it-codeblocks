@@ -1,15 +1,18 @@
-function codeBlocks(md, { referenceClass = 'reference', sampleClass = 'sample' } = {}) {
+function codeBlocks(md, { referenceClass = 'reference', sampleClass = 'sample', levelGrouping } = {}) {
+  // If level grouping is not an int, or is not between 1 and 7 inclusive, throw an error
+  
+  if(levelGrouping != )
   function addSections(state, startLine, endLine) {
     const Token = state.Token;
-    let tokens = [];
-    let sections = []
+    const tokens = [];
+    let sections = [];
 
     function openSection(attrs, sectionType = 'reference', closeIndex) {
       let t = new Token(`${sectionType}_section_open`, 'section', 1);
       let isReference = sectionType === 'reference';
       let section = {
         type: sectionType,
-        closeIndex: closeIndex
+        closeIndex: closeIndex,
       };
 
       t.block = true;
@@ -22,9 +25,11 @@ function codeBlocks(md, { referenceClass = 'reference', sampleClass = 'sample' }
     }
 
     function closeSection(sectionType = 'reference') {
+      let filteredSections = sections.filter((section) => section.type !== sectionType);
       let t = new Token(`${sectionType}_section_close`, 'section', -1);
+
       t.block = true;
-      sections = sections.filter((section) => section.type !== sectionType);
+      sections = filteredSections;
 
       return t;
     }
@@ -37,6 +42,7 @@ function codeBlocks(md, { referenceClass = 'reference', sampleClass = 'sample' }
 
     for (let i = 0; i < state.tokens.length; i++) {
       let token = state.tokens[i];
+      let currentLevel = headingLevel(token.tag);
 
       if (token.type == 'heading_close') {
         let closeIndex;
@@ -45,7 +51,7 @@ function codeBlocks(md, { referenceClass = 'reference', sampleClass = 'sample' }
         for (let j = i; j < state.tokens.length; j++) {
           let innerToken = state.tokens[j];
 
-          if (innerToken.type.includes('heading_open')) break;
+          if (innerToken.type.includes('heading_open') && (!levelGrouping || levelGrouping=== headingLevel(innerToken.tag))) break;
 
           if (innerToken.type.includes('fence')) {
             closeIndex = j + 1;
@@ -54,8 +60,13 @@ function codeBlocks(md, { referenceClass = 'reference', sampleClass = 'sample' }
           }
         }
 
+        // Add current token to list
         tokens.push(token);
-        tokens.push(openSection(token.attrs, closeIndex ? 'sample' : 'reference', closeIndex));
+
+        // Add new section token depending on grouping configuration
+        if(!levelGrouping  || levelGrouping >= currentLevel){
+          tokens.push(openSection(token.attrs, closeIndex ? 'sample' : 'reference', closeIndex));
+        }
       } else {
         let sample = sections.find((section) => section.type === 'sample');
 
@@ -65,8 +76,8 @@ function codeBlocks(md, { referenceClass = 'reference', sampleClass = 'sample' }
         }
 
         // Close sections before the next heading
-        if (token.type === 'heading_open') {
-          closeAllSections();
+        if (token.type === 'heading_open' && (!levelGrouping || levelGrouping===currentLevel)) {
+            closeAllSections();
         }
 
         tokens.push(token);
@@ -79,10 +90,17 @@ function codeBlocks(md, { referenceClass = 'reference', sampleClass = 'sample' }
     }
 
     state.tokens = tokens;
+    console.log(tokens)
   }
 
   md.core.ruler.after('block', 'code_sections', addSections);
 }
 
+function headingLevel(header) {
+  return parseInt(header.charAt(1));
+}
 
 module.exports = codeBlocks
+
+// if level = levelGrouping only close before the next heading with the same levelGrouping
+// All headings inside this grouping ie,all headings that are greater than this heading will not have code blocks
