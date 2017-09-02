@@ -1,5 +1,6 @@
 function codeBlocks(md, { referenceClass = 'reference', sampleClass = 'sample', levelGrouping } = {}) {
-  if((levelGrouping <= 7 && levelGrouping >= 1) || !levelGrouping ) {
+  console.log(levelGrouping)
+  if(!(levelGrouping <= 7 && levelGrouping >= 1) && levelGrouping ) {
     throw new Error("The given value for the levelGrouping argument is invalid. It must be either undefined, or an integer between 1 and 7 inclusive");
   }
 
@@ -46,13 +47,13 @@ function codeBlocks(md, { referenceClass = 'reference', sampleClass = 'sample', 
       let currentLevel = headingLevel(token.tag);
 
       if (token.type == 'heading_close') {
-        let closeIndex;
+        let closeIndex = null;
 
         // Find fence occurance, and track its closing tag
         for (let j = i; j < state.tokens.length; j++) {
           let innerToken = state.tokens[j];
 
-          if (innerToken.type.includes('heading_open') && (!levelGrouping || levelGrouping=== headingLevel(innerToken.tag))) break;
+          if (innerToken.type.includes('heading_open') && (!levelGrouping || headingLevel(innerToken.tag) <= levelGrouping)) break;
 
           if (innerToken.type.includes('fence')) {
             closeIndex = j + 1;
@@ -63,7 +64,7 @@ function codeBlocks(md, { referenceClass = 'reference', sampleClass = 'sample', 
 
         // Add current token to list
         tokens.push(token);
-
+        console.log(closeIndex)
         // Add new section token depending on grouping configuration
         if(!levelGrouping  || levelGrouping >= currentLevel){
           tokens.push(openSection(token.attrs, closeIndex ? 'sample' : 'reference', closeIndex));
@@ -77,7 +78,7 @@ function codeBlocks(md, { referenceClass = 'reference', sampleClass = 'sample', 
         }
 
         // Close sections before the next heading
-        if (token.type === 'heading_open' && (!levelGrouping || levelGrouping===currentLevel)) {
+        if (token.type === 'heading_open' && (!levelGrouping || currentLevel <= levelGrouping)) {
             closeAllSections();
         }
 
