@@ -1,5 +1,7 @@
 # markdown-it-codeblocks
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/jdalrymple/markdown-it-codeblocks.svg)](https://greenkeeper.io/)
+
 Splits up your header sections into samples and references ie :
 
 ````markdown
