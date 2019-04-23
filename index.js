@@ -1,5 +1,4 @@
 function codeBlocks(md, { referenceClass = 'reference', sampleClass = 'sample', levelGrouping } = {}) {
-  console.log(levelGrouping)
   if(!(levelGrouping <= 7 && levelGrouping >= 1) && levelGrouping ) {
     throw new Error("The given value for the levelGrouping argument is invalid. It must be either undefined, or an integer between 1 and 7 inclusive");
   }
@@ -64,7 +63,7 @@ function codeBlocks(md, { referenceClass = 'reference', sampleClass = 'sample', 
 
         // Add current token to list
         tokens.push(token);
-        console.log(closeIndex)
+
         // Add new section token depending on grouping configuration
         if(!levelGrouping  || levelGrouping >= currentLevel){
           tokens.push(openSection(token.attrs, closeIndex ? 'sample' : 'reference', closeIndex));
@@ -92,7 +91,6 @@ function codeBlocks(md, { referenceClass = 'reference', sampleClass = 'sample', 
     }
 
     state.tokens = tokens;
-    console.log(tokens)
   }
 
   md.core.ruler.after('block', 'code_sections', addSections);
